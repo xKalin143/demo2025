@@ -2,16 +2,16 @@
 Если вдруг не обновляются репозитории и связь долбится в ftp.altlinux.org, то делаем следующее:
 
 mcedit /etc/apt/sources.list.d/alt.list
-ftp.altlinux.ru – в трёх раскомментированных строчках посередине меняю .org на .ru
+ftp.altlinux.ru - в трёх раскомментированных строчках посередине меняю .org на .ru
  
 Первый модуль
 1.	Базовая настройка ISP
 apt-get update && apt-get install nano iptables tzdata -y
 nano /etc/hostname
-ISP – меняю имя!
+ISP - меняю имя!
 
 nano /etc/sysconfig/network
-HOSTNAME=ISP – поменял имя!
+HOSTNAME=ISP - поменял имя!
 
 cd /etc/net/ifaces/
 cp -r enp6s19 enp6s20
@@ -39,8 +39,8 @@ net.ipv4.ip_forward = 1
 
 service network restart
 ping ya.ru
-iptables -t nat -A POSTROUTING -o enp6s19 -j MASQUERADE
-MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.16.4.0/28 -o enp6s19 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.16.5.0/28 -o enp6s19 -j MASQUERADE
 iptables-save > /etc/sysconfig/iptables
 service iptables start
 
@@ -318,7 +318,7 @@ do wr
 11.	Настройка учёток, пользаков, времени на обеих SRV
 useradd -m sshuser -u 1010 -s /bin/bash
 passwd sshuser
-P@ssw0rd – два раза!
+P@ssw0rd - два раза!
 usermod -aG wheel sshuser
 
 mcedit /etc/sudoers
@@ -348,20 +348,20 @@ systemctl enable --now ahttpd alteratord
 domainname au-team.irpo
 
 mcedit /etc/sysconfig/network
-HOSTNAME=br-srv.au-team.irpo – меняю значение на это!
+HOSTNAME=br-srv.au-team.irpo - меняю значение на это!
 
 rm -rf /etc/samba/smb.conf /var/{lib,cache}/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass=’P@ssw0rd’ --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307
-samba-tool group add hq
-for i in $(seq 1 5); do samba-tool user add user$i.hq ‘P@ssw0rd’; done
-for i in $(seq 1 5); do samba-tool group addmembers hq user$i.hq; done
-admx-msi-setup
 git clone https://github.com/Wrage-ru/parse-csv.git
 cd parse-csv/
 mv example.csv /opt/users.csv
 chmod +x create-user.sh
 ./create-user.sh /opt/users.csv
+samba-tool group add hq
+for i in $(seq 1 5); do samba-tool user add user$i.hq ‘P@ssw0rd’; done
+for i in $(seq 1 5); do samba-tool group addmembers hq user$i.hq; done
+admx-msi-setup
 samba-tool computer add moodle --ip-address=172.16.4.1 -U Administrator
 samba-tool computer add wiki --ip-address=172.16.5.1 -U Administrator
  
@@ -371,21 +371,21 @@ apt-get update && apt-get install admx-* admc gpui sudo gpupdate -y
 Нажимаем Настройка
  
 
-Режим эксперта – Применить
+Режим эксперта - Применить
  
 
 Переходим в раздел Веб-интерфейс
  
 
-Меняем порт с 8080 на 8081 – Применить – Перезапустить HTTP-сервер
+Меняем порт с 8080 на 8081 - Применить - Перезапустить HTTP-сервер
  
-Переходим в раздел Домен, меняем адрес на 192.168.2.2, пароль админа – P@ssw0rd, Применить 
+Переходим в раздел Домен, меняем адрес на 192.168.2.2, пароль админа - P@ssw0rd, Применить 
  
 
 В случае успеха, должны поменяться значения текущего состояния:
  
 
-В параметрах проводного соединения указываем доп. серверы DNS – 192.168.2.2, потом включаем и отключаем поддержку сети
+В параметрах проводного соединения указываем доп. серверы DNS - 192.168.2.2, потом включаем и отключаем поддержку сети
  
 Возвращаемся в терминал
 acc
@@ -399,20 +399,20 @@ acc
  
 
 Заходим под Administrator, пароль P@ssw0rd
-su –
+su -
 admx-msi-setup
 roleadd hq wheel
 
 mcedit /etc/sudoers
-User_Alias		WHEEL_USERS = %wheel, %AU-TEAM\\hq – дописал!
-Cmnd_Alias		SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep – написал новую строчку!
-WHEEL_USERS ALL=(ALL:ALL) SHELLCMD – раскомментировал и поменял с ALL на SHELLCMD!
+User_Alias		WHEEL_USERS = %wheel, %AU-TEAM\\hq - дописал!
+Cmnd_Alias		SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep - написал новую строчку!
+WHEEL_USERS ALL=(ALL:ALL) SHELLCMD - раскомментировал и поменял с ALL на SHELLCMD!
 
 Выходим из рута
 kinit
 admc
 
-Раскрываем Объекты групповой политики, ПКМ по au-team.irpo – Создать политику и связать с этим подразделением
+Раскрываем Объекты групповой политики, ПКМ по au-team.irpo - Создать политику и связать с этим подразделением
  
 
 Называем sudoers
@@ -421,10 +421,10 @@ admc
 Ставим галочку на Принудительно
  
 
-ПКМ по sudoers – Edit
+ПКМ по sudoers - Edit
  
 
-Переходим по пути Компьютер – Административные шаблоны – Samba – Настройки Unix – Управлением разрешениями Sudo, состояние политики – Включено, Редактировать
+Переходим по пути Компьютер - Административные шаблоны - Samba - Настройки Unix - Управлением разрешениями Sudo, состояние политики - Включено, Редактировать
  
 
 Добавляем три поля, прописываем /usr/bin/id в первом, /bin/cat во втором, /bin/grep в третьем, потом нажимаем ОК
@@ -433,15 +433,15 @@ admc
 Нажимаем ОК в правом нижнем углу, закрываем окна, возвращаемся в терминал
 gpupdate -f
 Выходим из текущего пользователя
-Заходим под пользователем user3.hq – Пароль P@ssw0rd
+Заходим под пользователем user3.hq - Пароль P@ssw0rd
 Заходим в терминал
 sudo id
 sudo cat /root/.bashrc
  
 3.	Конфигурация файлового хранилища на HQ-SRV
-lsblk – необходимы три диска для raid (sdb, sdc, sdd)
+lsblk - необходимы три диска для raid (sdb, sdc, sdd)
 mdadm -C /dev/md0 -l 5 -n 3 /dev/sd{b,c,d}
-lsblk – проверяем, что диски sdb, sdc, sdd в raid5
+lsblk - проверяем, что диски sdb, sdc, sdd в raid5
 mkfs.ext4 /dev/md0
 echo DEVICE partitions >> /etc/mdadm.conf
 mdadm --detail --scan >> /etc/mdadm.conf
@@ -451,7 +451,7 @@ mcedit /etc/fstab
 /dev/md0	/raid5	ext4	defaults	0	0
 
 mount -a
-df -h – убедиться, что md0 в raid5
+df -h - убедиться, что md0 в raid5
 
 apt-get install nfs-{server,utils} -y
 mkdir /raid5/nfs
@@ -472,43 +472,43 @@ mcedit /etc/fstab
 192.168.1.2:/raid5/nfs	/mnt/nfs	nfs	defaults	0	0
 
 mount -a
-df -h – убедиться, что отображается адрес hq-srv
+df -h - убедиться, что отображается адрес hq-srv
  
 5.	Настройка chrony-сервера на ISP
 apt-get install chrony -y
 
 nano /etc/chrony.conf
-pool 0.ru.pool.ntp.org iburst – дописал!
+pool 0.ru.pool.ntp.org iburst - дописал!
 local stratum 5
 allow 0.0.0.0/0
 
 systemctl restart chronyd
 systemctl enable --now chronyd
-chronyc clients – выполнить команду после настройки клиентов ниже! должны быть клиенты 172.16.4.14 и 172.16.5.14, это нормально!
+chronyc clients - выполнить команду после настройки клиентов ниже! должны быть клиенты 172.16.4.14 и 172.16.5.14, это нормально!
  
 6.	Настройка ntp-клиента на обеих RTR
 en
 conf t
-ntp server 172.16.4.1 – только на HQ-RTR
-ntp server 172.16.5.1 – только на BR-RTR
+ntp server 172.16.4.1 - только на HQ-RTR
+ntp server 172.16.5.1 - только на BR-RTR
 do wr
  
 7.	Настройка chrony-клиента на обеих SRV и HQ-CLI
 mcedit /etc/chrony.conf
-pool 172.16.4.1 iburst – только на hq-srv и hq-cli
-pool 172.16.5.1 iburst – только на br-srv
+pool 172.16.4.1 iburst - только на hq-srv и hq-cli
+pool 172.16.5.1 iburst - только на br-srv
 
 systemctl restart chronyd
 systemctl enable --now chronyd
-chronyc sources – убедиться, что отобразился сервер chrony и не забудь проверить клиентов на ISP!
+chronyc sources - убедиться, что отобразился сервер chrony и не забудь проверить клиентов на ISP!
  
 8.	Настройка ssh на HQ-CLI для ansible
 mcedit /etc/openssh/sshd_config
-AllowUsers sysadmin – написал вручную!
-Port 2024 – раскомментировал и поменял значение!
-MasAuthTries 2 – раскомментировал и поменял значение!
-PunkeyAuthentication yes – раскомментировал!
-PasswordAuthentication yes – раскомментировал!
+AllowUsers sysadmin - написал вручную!
+Port 2024 - раскомментировал и поменял значение!
+MasAuthTries 2 - раскомментировал и поменял значение!
+PunkeyAuthentication yes - раскомментировал!
+PasswordAuthentication yes - раскомментировал!
 
 systemctl restart sshd
 systemctl enable --now sshd
@@ -537,10 +537,10 @@ ansible_port =2024
 
 mcedit ansible.cfg
 [defaults]
-interpreter_python = /usr/bin/python3 – написал вручную!
-host_key_checking = False – раскомментировал!
+interpreter_python = /usr/bin/python3 - написал вручную!
+host_key_checking = False - раскомментировал!
 
-ansible -m ping all – убедиться, что у всех четырёх устройств зелёный цвет и pong!
+ansible -m ping all - убедиться, что у всех четырёх устройств зелёный цвет и pong!
  
 10.	Настройка Docker на BR-SRV
 apt-get install docker-ce docker-compose -y
@@ -554,7 +554,7 @@ systemctl enable --now docker.socket docker.service
 
 Запускаем терминал
 ssh -p 2024 sshuser@192.168.2.2
-su –
+su -
 
 mcedit wiki.yml
 Копируем сюда тот самый пример кода на сайте (зеленым выделено то, что НЕ НАДО менять, синим выделено то, что НАДО менять!)
@@ -562,15 +562,15 @@ mcedit wiki.yml
 #
 # Access via "http://localhost:8080"
 #   (or "http://$(docker-machine ip):8080" if using docker-machine)
-# version: '3'  – комментирую!(в новой версии mediawiki этой строки нет)
+# version: '3'  - комментирую!(в новой версии mediawiki этой строки нет)
 services:
-  wiki:  – удалил часть слова media!
+  wiki:  - удалил часть слова media!
     image: mediawiki
     restart: always
     ports:
       - 8080:80
     links:
-      - mariadb  – заменил на это!
+      - mariadb  - заменил на это!
     volumes:
       - images:/var/www/html/images
       # After initial setup, download LocalSettings.php to the same directory as
@@ -578,14 +578,14 @@ services:
       # the mediawiki service
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
   # This key also defines the name of the database host used during setup instead of the default "localhost"
-  mariadb: – заменил на это!
+  mariadb: - заменил на это!
     image: mariadb
     restart: always
     environment:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
-      MYSQL_DATABASE: mediawiki – заменил на это!
-      MYSQL_USER: wiki – заменил на это!
-      MYSQL_PASSWORD: WikiP@ssw0rd – заменил на это!
+      MYSQL_DATABASE: mediawiki - заменил на это!
+      MYSQL_USER: wiki - заменил на это!
+      MYSQL_PASSWORD: WikiP@ssw0rd - заменил на это!
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     volumes:
       - db:/var/lib/mysql
@@ -595,7 +595,7 @@ volumes:
   db:
 
 Возвращаемся на BR-SRV и ждем пока установится докер!
-docker compose -f wiki.yml up -d – ждём пока все запустится!
+docker compose -f wiki.yml up -d - ждём пока все запустится!
 
 Заходим в Firefox и переходим по адресу 192.168.2.2:8080
 Нажимаем на set up the wiki
@@ -604,16 +604,16 @@ docker compose -f wiki.yml up -d – ждём пока все запуститс
 Далее
  
 
-Листаем вниз – Далее
+Листаем вниз - Далее
  
 
-Пишем в строчках: хост базы данных: mariadb, имя БД – mediawiki, имя пользователя БД – wiki, пароль БД – WikiP@ssw0rd, нажимаем Далее
+Пишем в строчках: хост базы данных: mariadb, имя БД - mediawiki, имя пользователя БД - wiki, пароль БД - WikiP@ssw0rd, нажимаем Далее
  
 
 Далее
  
 
-Название вики – wiki, имя участника – wiki, пароль – WikiP@ssw0rd, снимаем галочку с «Поделиться сведениями...», выбрать «Хватит уже, просто…», Далее
+Название вики - wiki, имя участника - wiki, пароль - WikiP@ssw0rd, снимаем галочку с «Поделиться сведениями...», выбрать «Хватит уже, просто…», Далее
  
 
 Далее 
@@ -634,7 +634,7 @@ scp -P 2024 LocalSettings.php sshuser@192.168.2.2:/home/sshuser
 mv /home/sshsuser/LocalSettings.php .
 
 mcedit wiki.yml
-    - ./LocalSettings.php:/var/www/html/LocalSettings.php – раскомментировал строку!
+    - ./LocalSettings.php:/var/www/html/LocalSettings.php - раскомментировал строку!
 
 docker compose -f wiki.yml down
 docker compose -f wiki.yml up -d
@@ -673,31 +673,31 @@ exit
 apt-get install deploy -y
 
 mcedit /usr/share/deploy/moodle/tasks/main.yml
-F4 – заменяем moodle1 на moodledb для всех
-Еще раз F4 – заменяем moodleuser  на moodle для всех
+F4 - заменяем moodle1 на moodledb для всех
+Еще раз F4 - заменяем moodleuser  на moodle для всех
 -name: generate password for Moodle
- shell: echo ‘P@ssw0rd’ – заменил на это значение!
+ shell: echo ‘P@ssw0rd’ - заменил на это значение!
 
 deploy moodle
 Пока deploy делает прогон, идем ниже на пункт 16 ставить браузер и после того как deploy сделает прогон, идём донастраивать moodle на HQ-CLI
  
 16.	Установка Яндекс Браузера для Организаций на HQ-CLI
-su –
+su -
 apt-get install yandex-browser -y
 *Личная заметка*
 Дальше несколько путей: можно запомнить мою сокращенную ссылку ниже и скачать файл, либо заходить в свой аккаунт на тачке. Наверняка первый вариант кажется всем предпочтительней, поэтому скачиваем отсюда:
 goo.su/pHFVM
-На 19 мая 2025 версия Яндекс Браузера для Организаций – 25.2.1
+На 19 мая 2025 версия Яндекс Браузера для Организаций - 25.2.1
 Запускаем скаченный файл
  
 17.	Донастройка moodle на HQ-CLI
 Запускаем браузер и переходим по адресу 192.168.1.2/moodle
 В правом верхнем углу нажимаем Вход
 
-Логин – admin, пароль – P@ssw0rd
+Логин - admin, пароль - P@ssw0rd
  
 
-Адрес электронной почты – moodle@au-team.irpo
+Адрес электронной почты - moodle@au-team.irpo
  
 
 Ниже нажимаем кнопку Обновить профиль
@@ -763,9 +763,9 @@ $CFG->wwwroot = ‘http://moodle.au-team.irpo/moodle’; - поменял зна
 
 nano /etc/httpd2/conf/sites-enabled/000-default.conf
 Листаем в самый конец!
-#RewriteEngine On – закомментировал!
-#RewriteCond %{HTTPS} !=on – закомментировал!
-#RewriteRule ^/(.*) https://%{HTTPS_HOST}/$1 [R,L] – закомментировал!
+#RewriteEngine On - закомментировал!
+#RewriteCond %{HTTPS} !=on - закомментировал!
+#RewriteRule ^/(.*) https://%{HTTPS_HOST}/$1 [R,L] - закомментировал!
 
 systemctl restart httpd2
  
@@ -783,16 +783,17 @@ systemctl restart httpd2
 Нету
  
 5.	Настройка принт-сервера CUPS на HQ-SRV
-apt-get install cups cups-pdf
+apt-get install cups cups-pdf -y
 systemctl enable --now cups
 
 nano /etc/cups/cupsd.conf
 Везде где есть Location дописать Allow all
  
+
 systemctl restart cups
  
 6.	Донастройка принт-сервера CUPS на HQ-CLI
-su –
+su -
 lpadmin -x Cups-PDF
 lpadmin -p CUPS -E -v ipp://hq-srv.au-team.irpo:631/printers/Cups-PDF -m everywhere
 lpoptions -d CUPS
@@ -811,8 +812,7 @@ mkdir /etc/ansible/PC_INFO/
 nano /etc/ansible/playbook.yml
 ---  
 - name: Works
-  hosts: hq-srv,br-srv,hq-cli
-  become: yes
+  hosts: Alt
   gather_facts: yes
   tasks:
     - name: Hostname
@@ -830,9 +830,8 @@ nano /etc/ansible/playbook.yml
         mode: '0644'
       delegate_to: localhost
 
-ansible-playbook /etc/ansible/playbook.yml – если так не работает, то дописываем -K
+ansible-playbook /etc/ansible/playbook.yml - если так не работает, то дописываем -K
 ls /etc/ansible/PC_INFO/
 cat /etc/ansible/PC_INFO/какой-то файл.yml 
-
 10.	Механизм резервного копирования через ansible на BR-SRV
 Пока нету

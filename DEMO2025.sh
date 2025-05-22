@@ -353,6 +353,7 @@ HOSTNAME=br-srv.au-team.irpo - меняю значение на это!
 rm -rf /etc/samba/smb.conf /var/{lib,cache}/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass=’P@ssw0rd’ --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307
+Идём на клиента!
 git clone https://github.com/Wrage-ru/parse-csv.git
 cd parse-csv/
 mv example.csv /opt/users.csv
@@ -364,6 +365,7 @@ for i in $(seq 1 5); do samba-tool group addmembers hq user$i.hq; done
 admx-msi-setup
 samba-tool computer add moodle --ip-address=172.16.4.1 -U Administrator
 samba-tool computer add wiki --ip-address=172.16.5.1 -U Administrator
+samba-tool computer add HQ-SRV --ip-address=192.168.1.2 -U Administrator
  
 2.	Ввод в домен и настройка Samba на HQ-CLI
 apt-get update && apt-get install admx-* admc gpui sudo gpupdate -y
@@ -398,6 +400,7 @@ acc
 Успешно выполнение
  
 
+Возвращаемся на BR-SRV!
 Заходим под Administrator, пароль P@ssw0rd
 su -
 admx-msi-setup

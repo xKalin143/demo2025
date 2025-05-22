@@ -813,28 +813,22 @@ lpstat -p
 mkdir /etc/ansible/PC_INFO/
 
 nano /etc/ansible/playbook.yml
----  
+---
 - name: Works
   hosts: Alt
   gather_facts: yes
   tasks:
-    - name: Hostname
-      set_fact:
-        pc_name: "{{ ansible_hostname }}"
-    - name: IPs
-      set_fact:
-        pc_ip: "{{ ansible_default_ipv4.address }}"
-    - name: Save Info
-      copy:
-        dest: "/etc/ansible/PC_INFO/{{ pc_name }}.yml"
-        content:
-          hostname: “{{ pc_name }}”
-          ip_address: “{{ pc_ip }}”
-        mode: '0644'
+    - name: Create info
       delegate_to: localhost
+      copy:
+        dest: "/etc/ansible/PC_INFO/{{ ansible_hostname }}.yml"
+        content: |
+            Имя компьютера: '{{ ansible_hostname }}'
+            IP-адрес компьютера: '{{ ansible_default_ipv4.address }}'
 
 ansible-playbook /etc/ansible/playbook.yml - если так не работает, то дописываем -K
 ls /etc/ansible/PC_INFO/
 cat /etc/ansible/PC_INFO/какой-то файл.yml 
+
 10.	Механизм резервного копирования через ansible на BR-SRV
 Пока нету

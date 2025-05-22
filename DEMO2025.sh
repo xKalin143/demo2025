@@ -799,7 +799,7 @@ systemctl restart cups
 su -
 lpadmin -x Cups-PDF
 lpadmin -p CUPS -E -v ipp://hq-srv.au-team.irpo:631/printers/Cups-PDF -m everywhere
-lpoptions -d CUPS
+lpadmin -d CUPS
 lpstat -p
 Печатаем любой док, переходим по адресу принтера https://hq-srv.au-team.irpo:631, Принтеры, Cups-PDF, Показать все задания (должно быть задание со статусом "завершено")
  

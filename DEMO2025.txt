@@ -400,7 +400,7 @@ acc
 Успешно выполнение
  
 
-Возвращаемся на BR-SRV!
+Возвращаемся на BR-SRV к git clone!
 Заходим под Administrator, пароль P@ssw0rd
 su -
 admx-msi-setup

@@ -353,7 +353,7 @@ HOSTNAME=br-srv.au-team.irpo - меняю значение на это!
 rm -rf /etc/samba/smb.conf /var/{lib,cache}/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass=’P@ssw0rd’ --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307
-Идём на клиента!
+Идём на клиента ниже на пункт 2!
 git clone https://github.com/Wrage-ru/parse-csv.git
 cd parse-csv/
 mv example.csv /opt/users.csv

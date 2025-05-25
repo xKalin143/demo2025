@@ -561,12 +561,7 @@ ssh -p 2024 sshuser@192.168.2.2
 su -
 
 mcedit wiki.yml
-Копируем сюда тот самый пример кода на сайте (зеленым выделено то, что НЕ НАДО менять, синим выделено то, что НАДО менять!)
-# MediaWiki with MariaDB
-#
-# Access via "http://localhost:8080"
-#   (or "http://$(docker-machine ip):8080" if using docker-machine)
-# version: '3'  - комментирую!(в новой версии mediawiki этой строки нет)
+Копируем сюда тот самый пример кода на сайте
 services:
   wiki:  - удалил часть слова media!
     image: mediawiki
@@ -577,16 +572,11 @@ services:
       - mariadb  - заменил на это!
     volumes:
       - images:/var/www/html/images
-      # After initial setup, download LocalSettings.php to the same directory as
-      # this yaml and uncomment the following line and use compose to restart
-      # the mediawiki service
       # - ./LocalSettings.php:/var/www/html/LocalSettings.php
-  # This key also defines the name of the database host used during setup instead of the default "localhost"
   mariadb: - заменил на это!
     image: mariadb
     restart: always
     environment:
-      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
       MYSQL_DATABASE: mediawiki - заменил на это!
       MYSQL_USER: wiki - заменил на это!
       MYSQL_PASSWORD: WikiP@ssw0rd - заменил на это!

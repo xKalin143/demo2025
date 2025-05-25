@@ -910,6 +910,7 @@ systemctl enable --now docker.socket docker.service
 
 mcedit /etc/bind/zone/db.au
 mon    IN    A     192.168.1.2
+systemctl restart bind
 
 mcedit zabbix.yml
 services:

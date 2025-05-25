@@ -981,13 +981,13 @@ systemctl enable --now zabbix_agentd
 Логин, пароль: Admin, zabbix
 Users > Authentication и снимаем галочку  Avoid easy-to-guess password, сохраняем
 User settings > Profile меняем пароль
-Monitorin > Hosts > Create host
+Monitoring > Hosts > Create host
 Указываем hostname, templates - linux by zabbix agent 
 Выбираем группу и указываем адрес
 Дашбор > edit 
 Удаляем не нужные виджиты и добавляем виджиты для хостов
 Тип график
-Ниже - хост - нужный хост , ram % , cpu utilization, free space in %
+Ниже - хост - нужный хост , ram % , cpu utilization, fs space used in %
 добавляем для каждой машины и сохраняем изменения дашборда!
  
 12.	Настройка инвентаризации через ansible на BR-SRV

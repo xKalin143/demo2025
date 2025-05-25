@@ -353,7 +353,7 @@ HOSTNAME=br-srv.au-team.irpo - меняю значение на это!
 rm -rf /etc/samba/smb.conf /var/{lib,cache}/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass=’P@ssw0rd’ --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307
-Идём на клиента ниже на пункт 2!
+Идём на клиента ниже!
 git clone https://github.com/Wrage-ru/parse-csv.git
 cd parse-csv/
 mv example.csv /opt/users.csv
@@ -366,6 +366,7 @@ admx-msi-setup
 samba-tool computer add moodle --ip-address=172.16.4.1 -U Administrator
 samba-tool computer add wiki --ip-address=172.16.5.1 -U Administrator
 samba-tool computer add HQ-SRV --ip-address=192.168.1.2 -U Administrator
+samba-tool computer add mon --ip-address=192.168.1.2 -U Administrator
  
 2.	Ввод в домен и настройка Samba на HQ-CLI
 apt-get update && apt-get install admx-* admc gpui sudo gpupdate -y
@@ -381,7 +382,7 @@ apt-get update && apt-get install admx-* admc gpui sudo gpupdate -y
 
 Меняем порт с 8080 на 8081 - Применить - Перезапустить HTTP-сервер
  
-Переходим в раздел Домен, выбираем Active Directory, меняем адрес на 192.168.2.2, пароль админа - P@ssw0rd, Применить 
+Переходим в раздел Домен, меняем адрес на 192.168.2.2, пароль админа - P@ssw0rd, Применить 
  
 
 В случае успеха, должны поменяться значения текущего состояния:
@@ -782,10 +783,107 @@ systemctl restart httpd2
 3.	Шифрование IP-Туннеля
 Нету
  
-4.	Настройка межсетевого экрана
-Нету
+4.	Настройка межсетевого экрана на HQ-RTR
+en
+conf t
+filter-map ipv4 http
+match tcp any any eq 80
+set accept
+exit
+filter-map ipv4 https
+match tcp any any eq 443
+set accept
+exit
+filter-map ipv4 ntp
+match udp any any eq 123
+set accept
+exit
+filter-map ipv4 icmp
+match icmp any any 
+set accept
+exit
+filter-map ipv4 dns
+match udp any any
+set accept
+exit
+filter-map ipv4 gre
+match gre any any
+set accept
+exit
+filter-map ipv4 ospf
+match ospf any any
+set accept
+exit
+filter-map ipv4 ssh
+match tcp any any
+set accept
+exit
+filter-map ipv4 blk
+match any any any
+set discard
+exit
+int isp
+set filter-map in dns
+set filter-map in gre
+set filter-map in ospf
+set filter-map in http
+set filter-map in https
+set filter-map in ntp
+set filter-map in icmp
+set filter-map in ssh
+set filter-map in blk
  
-5.	Настройка принт-сервера CUPS на HQ-SRV
+5.	Настройка межсетевого экрана на BR-RTR
+en
+conf t
+filter-map ipv4 http
+match tcp any any eq 80
+set accept
+exit
+filter-map ipv4 https
+match tcp any any eq 443
+set accept
+exit
+filter-map ipv4 ntp
+match udp any any eq 123
+set accept
+exit
+filter-map ipv4 icmp
+match icmp any any 
+set accept
+exit
+filter-map ipv4 dns
+match udp any any
+set accept
+exit
+filter-map ipv4 gre
+match gre any any
+set accept
+exit
+filter-map ipv4 ospf
+match ospf any any
+set accept
+exit
+filter-map ipv4 ssh
+match tcp any any
+set accept
+exit
+filter-map ipv4 blk
+match any any any
+set discard
+exit
+int isp
+set filter-map in dns
+set filter-map in gre
+set filter-map in ospf
+set filter-map in http
+set filter-map in https
+set filter-map in ntp
+set filter-map in icmp
+set filter-map in ssh
+set filter-map in blk
+ 
+6.	Настройка принт-сервера CUPS на HQ-SRV
 apt-get install cups cups-pdf -y
 systemctl enable --now cups
 
@@ -795,7 +893,7 @@ nano /etc/cups/cupsd.conf
 
 systemctl restart cups
  
-6.	Донастройка принт-сервера CUPS на HQ-CLI
+7.	Донастройка принт-сервера CUPS на HQ-CLI
 su -
 lpadmin -x Cups-PDF
 lpadmin -p CUPS -E -v ipp://hq-srv.au-team.irpo:631/printers/Cups-PDF -m everywhere
@@ -803,13 +901,95 @@ lpadmin -d CUPS
 lpstat -p
 Печатаем любой док, переходим по адресу принтера https://hq-srv.au-team.irpo:631, Принтеры, Cups-PDF, Показать все задания (должно быть задание со статусом "завершено")
  
-7.	Настройка логирования
+8.	Настройка логирования
 Нету
  
-8.	Настройка мониторинга
-Нету
+9.	Настройка мониторинга на HQ-SRV
+apt-get install docker-ce docker-compose -y
+systemctl enable --now docker.socket docker.service
+
+mcedit /etc/bind/zone/db.au
+mon    IN    A     192.168.1.2
+
+mcedit zabbix.yml
+services:
+  zabbix-postgres:
+    container_name: zabbix-postgres
+    image: postgres
+    volumes:
+      - postgres-zabbix:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix
+    restart: unless-stopped
+
+  zabbix-server:
+    container_name: zabbix-server
+    image: zabbix/zabbix-server-pgsql
+    environment:
+      DB_SERVER_HOST: zabbix-postgres
+      DB_SERVER_PORT: 5432
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix
+    ports:
+      - 10051:10051
+    restart: unless-stopped
+    depends_on:
+      - zabbix-postgres
+
+  zabbix-web:
+    container_name: zabbix-web
+    image: zabbix/zabbix-web-nginx-pgsql
+    environment:
+      DB_SERVER_HOST: zabbix-postgres
+      DB_SERVER_PORT: 5432
+      POSTGRES_DB: zabbix
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: zabbix
+      ZBX_SERVER_HOST: zabbix-server
+      ZBX_SERVER_PORT: 10051
+      PHP_TZ: Europe/Moscow
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - zabbix-postgres
+
+volumes:
+  postgres-zabbix:
+
+docker compose -f zabbix.yml up -d
+mcedit /etc/zabbix/zabbix_agentd.conf
+Server=0.0.0.0/0
+ServerActive=192.168.1.2
+Hostname=hq-srv.au-team.irpo
+systemctl enable --now zabbix_agentd
  
-9.	Настройка инвентаризации через ansible на BR-SRV
+10.	Настройка агента мониторинга на BR-SRV
+mcedit /etc/zabbix/zabbix_agentd.conf
+Server=0.0.0.0/0
+ServerActive=192.168.1.2
+Hostname=br-srv.au-team.irpo
+
+systemctl enable --now zabbix_agentd
+ 
+11.	Настройка веб-интерфейса Zabbix на HQ-CLI
+Переходим в браузере по адресу mon.au-team.irpo:8080
+Логин, пароль: Admin, zabbix
+Users > Authentication и снимаем галочку  Avoid easy-to-guess password, сохраняем
+User settings > Profile меняем пароль
+Monitorin > Hosts > Create host
+Указываем hostname, templates - linux by zabbix agent 
+Выбираем группу и указываем адрес
+Дашбор > edit 
+Удаляем не нужные виджиты и добавляем виджиты для хостов
+Тип график
+Ниже - хост - нужный хост , ram % , cpu utilization, free space in %
+добавляем для каждой машины и сохраняем изменения дашборда!
+ 
+12.	Настройка инвентаризации через ansible на BR-SRV
 mkdir /etc/ansible/PC_INFO/
 
 nano /etc/ansible/playbook.yml
@@ -830,5 +1010,5 @@ ansible-playbook /etc/ansible/playbook.yml - если так не работае
 ls /etc/ansible/PC_INFO/
 cat /etc/ansible/PC_INFO/какой-то файл.yml
  
-10.	Механизм резервного копирования через ansible на BR-SRV
+13.	Механизм резервного копирования через ansible на BR-SRV
 Пока нету

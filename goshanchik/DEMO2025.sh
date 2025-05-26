@@ -407,7 +407,7 @@ admx-msi-setup
 roleadd hq wheel
 
 mcedit /etc/sudoers
-User_Alias		WHEEL_USERS = %wheel, %AU-TEAM\\\\hq - dopisal!
+User_Alias		WHEEL_USERS = %wheel, %AU-TEAM\\hq - dopisal!
 Cmnd_Alias		SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep - napisal novuyu strochku!
 WHEEL_USERS ALL=(ALL:ALL) SHELLCMD - raskommentiroval i pomenyal s ALL na SHELLCMD!
 

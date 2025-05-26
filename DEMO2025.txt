@@ -970,10 +970,11 @@ systemctl enable --now zabbix_agentd
 Переходим в браузере по адресу mon.au-team.irpo:8080
 Логин, пароль: Admin, zabbix
 Users > Authentication и снимаем галочку  Avoid easy-to-guess password, сохраняем
-User settings > Profile меняем пароль
-Monitoring > Hosts > Create host
-Указываем hostname, templates - linux by zabbix agent 
-Выбираем группу и указываем адрес
+User settings > Profile меняем пароль на P@ssw0rd
+Переходим Monitoring > Hosts, нажимаем на Zabbix Server, меняем адрес на 192.168.1.2, Update
+Тут же в правом верхнем углу Create host
+Указываем hostname - BR-SRV, templates - linux by zabbix agent
+Выбираем группу linux servers и указываем адрес agent - 192.168.2.2
 Дашбор > edit 
 Удаляем не нужные виджиты и добавляем виджиты для хостов
 Тип график

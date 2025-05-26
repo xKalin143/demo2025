@@ -1,0 +1,2 @@
+Byl skonfigurirovan GRE-tunnel' mezhdu dvumya routerami HQ-RTR i BR-RTR, imeyushchij adres 10.10.10.9 na pervom routere, i 10.10.10.10 na vtorom routere. 
+GRE byl vybran v kachestve tunnelya iz-za ego universal'nosti i vozmozhnosti peredavat' shirokoveshchatel'nyj trafik, chto pozvolyaet ispol'zovat' cherez takoj tunnel' protokoly marshrutizacii.

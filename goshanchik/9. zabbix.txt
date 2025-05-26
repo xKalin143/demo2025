@@ -1,0 +1,1 @@
+V kachestve sistemy monitoringa byl vybran Zabbix za ego prostotu ustanovki, gibkost' nastrojki i besplatnoe predostavlenie. Zabbix rabotaet na portu 8080, tak kak on byl razvyornut v kontejnere Docker. Rabotaet Zabbix po adresu http://mon.au-team.irpo:8080

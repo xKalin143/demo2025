@@ -969,10 +969,11 @@ systemctl enable --now zabbix_agentd
 Perekhodim v brauzere po adresu mon.au-team.irpo:8080
 Login, parol': Admin, zabbix
 Users > Authentication i snimaem galochku  Avoid easy-to-guess password, sohranyaem
-User settings > Profile menyaem parol'
-Monitoring > Hosts > Create host
-Ukazyvaem hostname, templates - linux by zabbix agent 
-Vybiraem gruppu i ukazyvaem adres
+User settings > Profile menyaem parol' na P@ssw0rd
+Perekhodim Monitoring > Hosts, najimaem na Zabbix Server, menyaem adres na 192.168.1.2, Update
+Tut je v pravom verhnem uglu Create host
+Ukazyvaem hostname - BR-SRV, templates - linux by zabbix agent 
+Vybiraem gruppu linux servers i ukazyvaem adres agent - 192.168.2.2
 Dashbor > edit 
 Udalyaem ne nuzhnye vidzhity i dobavlyaem vidzhity dlya hostov
 Tip grafik

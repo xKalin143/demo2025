@@ -1,0 +1,16 @@
+[Eco]
+192.168.1.1
+192.168.2.1
+
+[Eco:vars]
+ansible_ssh_user=admin
+ansible_ssh_pass=admin
+ansible_connection=network_cli
+ansible_network_os=ios
+
+[Alt]
+192.168.1.2 ansible_ssh_user=sshuser ansible_ssh_pass=P@ssw0rd
+192.168.1.66 ansible_ssh_user=sysadmin ansible_ssh_pass=toor
+
+[Alt:vars]
+ansible_port=2024

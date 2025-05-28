@@ -917,6 +917,18 @@ mcedit /etc/rsyslog.d/00_common.conf
        IgnorePreviousMessages="on"
 в конце конфигурации указать тип сообщений и сервер логирования (TCP)
 *.warning @@192.168.1.2:514
+
+Скрипт
+/opt/*/rsyslog.txt {
+weekly
+minsize 15M
+compress
+missingok
+notifempty
+create 0644 root root
+rotate 4
+dateext
+}
  
 9.	Настройка мониторинга на HQ-SRV
 apt-get install docker-ce docker-compose -y

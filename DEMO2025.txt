@@ -891,8 +891,32 @@ lpadmin -d CUPS
 lpstat -p
 Печатаем любой док, переходим по адресу принтера https://hq-srv.au-team.irpo:631, Принтеры, Cups-PDF, Показать все задания (должно быть задание со статусом "завершено")
  
-8.	Настройка логирования
-Нету
+8.	Настройка логирования на HQ-SRV и BR-SRV
+HQ-SRV:
+apt-get install -y rsyslog
+mcedit /etc/rsyslog.d/00_common.conf
+раскоментировать module(load="imtcp") и input(type="imtcp" port="514")
+в конце прописать
+$template RemoteLogs, "/opt/%HOSTNAME%/rsyslog.txt"
+*.* ?RemoteLogs
+& stop
+(скрин 1)
+скрипт по ротации логов
+mcedit /etc/logrotate.d/rsyslog
+
+на BR-SRV:
+apt-get install -y rsyslog rsyslog-imjouranl
+mcedit /etc/rsyslog.d/08_imjournal.conf
+закоментить первую строчку
+
+(скрин 2)
+mcedit /etc/rsyslog.d/00_common.conf
+раскоментить 1,3,4 module
+в первом дописать 
+       StateFile="imjournal.state"
+       IgnorePreviousMessages="on"
+в конце конфигурации указать тип сообщений и сервер логирования (TCP)
+*.warning @@192.168.1.2:514
  
 9.	Настройка мониторинга на HQ-SRV
 apt-get install docker-ce docker-compose -y

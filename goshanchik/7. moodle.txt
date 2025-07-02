@@ -1,1 +1,0 @@
-Byl nastroen servis moodle na HQ-SRV. Ispol'zuetsya veb-server apache, v kachestve bd ispol'zuetsya mariadb, sozdana bd moodledb, zadan parol' P@ssw0rd dlya pol'zovatelya admin v sisteme obucheniya.

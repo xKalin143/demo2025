@@ -1,3 +1,0 @@
-Kommutator byl nastroen s pomoshch'yu paketa openvswitch, interfejs ens33 byl nastroen kak trankovyj dlya podsetej 100,200,999.
-Interfejs ens34 byl nastroen kak tegirovannyj dlya seti 100, interfejs ens35 byl nastroen kak tegirovannyj dlya seti 200.
-Sam kommutator nahoditsya v seti 999.

@@ -1,1 +1,0 @@
-Dlya dinamicheskoj marshrutizacii byl vybran OSPF. Ego preimushchestva - avtomaticheskaya adaptaciya k izmeneniyam v seti, bystraya skhodimost', masshtabiruemost' i podderzhka ierarhicheskoj struktury seti.

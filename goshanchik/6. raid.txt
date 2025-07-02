@@ -1,2 +1,0 @@
-Bylo nastroeno fajlovoe hranilishche i sobran RAID-massiv urovnya 5 iz tryoh diskov po 1 gb s fajlovoj sistemoj ext4 na HQ-SRV. Tak zhe byl nastroen setevoj fajlovyj server na HQ-SRV i HQ-CLI.
-U HQ-SRV setevoe hranilishche raspolagaetsya po puti /raid5/nfs, u HQ-CLI setevoe hranilishche raspolagaetsya po puti /mnt/nfs.
